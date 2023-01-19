@@ -1,0 +1,8 @@
+# Folders
+__pycache__/
+build/
+db_backup/
+
+# Files
+.DS_Store
+*.so
