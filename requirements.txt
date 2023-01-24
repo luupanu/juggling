@@ -1,3 +1,4 @@
 cython~=0.29.32
 numpy~=1.23.5
 scipy~=1.9.3
+setuptools

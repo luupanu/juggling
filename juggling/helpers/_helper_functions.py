@@ -1,5 +1,5 @@
 from scipy.sparse import csr_matrix
-from _util_functions import (
+from ._util_functions import (
     binary_search,
     multiset_permutations
 )

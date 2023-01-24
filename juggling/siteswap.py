@@ -1,6 +1,6 @@
-from _helper_functions import adjacency_matrix
-from _siteswap_cython import all_siteswaps_between
-from _util_functions import (
+from helpers._helper_functions import adjacency_matrix
+from helpers._siteswap_cython import all_siteswaps_between
+from helpers._util_functions import (
     divisors,
     mobius,
 )

@@ -1,4 +1,4 @@
-from _db_constants import BYTES_PER_PATTERN, HEADER_SIZE
+from ._db_constants import BYTES_PER_PATTERN, HEADER_SIZE
 
 def binary_search(x: int, a: list[list[int]]) -> int:
     m = 0
