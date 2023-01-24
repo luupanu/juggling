@@ -15,7 +15,7 @@ __all__ = ['all_siteswaps', 'number_of_juggling_patterns', 'random_siteswap']
 
 def all_siteswaps(balls: int, period: int, max_throw: int = None) -> list[str]:
     if (not max_throw or max_throw > balls * period):
-        max_throw = min(balls * period, 15)
+        max_throw = balls * period
 
     _validate_siteswap(balls, period, max_throw)
 
@@ -52,7 +52,7 @@ def number_of_juggling_patterns(balls: int, period: int, max_throw: int = None) 
 
 def random_siteswap(balls: int, period: int, max_throw: int = None) -> str:
     if (not max_throw or max_throw > balls * period):
-        max_throw = min(balls * period, 15)
+        max_throw = balls * period
 
     _validate_siteswap(balls, period, max_throw)
     
@@ -68,8 +68,8 @@ def random_siteswap(balls: int, period: int, max_throw: int = None) -> str:
     return siteswap
 
 def _validate_siteswap(balls: int, period: int, max_throw: int) -> None:
-    if max_throw > 15:
-        raise ValueError('maximum throw must be less than 16!')
+    if max_throw > 35:
+        raise ValueError('maximum throw must be less than 36!')
 
     if balls < 1:
         raise ValueError('balls must be at least 1!')
