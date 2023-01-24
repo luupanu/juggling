@@ -28,7 +28,7 @@ Siteswaps are a notation system to encode juggling patterns. They are read from 
 
 !['3' or three-ball cascade](examples/3.gif)
 
-_`3` or three-ball cascade_
+`3` _or three-ball cascade_
 
 Siteswaps notate patterns that are periodic, therefore the three-ball cascade `333` can be notated as just `3`, or similarly `441441` can be simplified to `441`. This is called the minimal period pattern, which is the only pattern we will explore.
 
@@ -36,7 +36,7 @@ Siteswaps notate patterns that are periodic, therefore the three-ball cascade `3
 
 !['441'](examples/441.gif)
 
-_`441`_
+`441`
 
 Notice that for all intents and purposes `441` is the same pattern as `414` or `144`, just shifted left or right once (i.e. started earlier or later). Since all patterns we have are periodic, we're going to say that the highest number prevails, and therefore use `441` to describe this pattern.
 
@@ -48,7 +48,7 @@ The number of balls `b` indicates how many balls are required to juggle a sitesw
 
 !['f001', a pattern with a single throw of 15](examples/f001.gif)
 
-_`f001`, a pattern with a single throw of 15_
+`f001`_, a pattern with a single throw of 15_
 
 When generating siteswaps we might sometimes want to constrain the maximum throw `t`. Humans on earth are after all not that great at throwing heights such as `t=15`.
 
@@ -225,11 +225,11 @@ def naive_all_siteswaps5(balls: int, period: int):
 
     return siteswaps
 
-print(len(naive_all_siteswaps5(2, 4))) # prints 12
+print(len(naive_all_siteswaps5(2, 4))) # prints 15
 ```
 There's a lot of remaining problems:
 
-1) Maximum throw `t` is not accounted for. The way we set up our maximum range for the for-loop means that we can't have throws higher than `t=9`.
+1) Maximum throw `t` is not accounted for. The way we set up our maximum range in the for-loop means that we can't have throws higher than `t=9`.
 2) Our algorithm does not account for any erroneous input (`b<1; n<1; t<b`)
 3) Our algorithm does not work for `n=1`
 4) As we are going through almost half the possible numbers with period `n`, the algorithm becomes super slow with higher periods:
