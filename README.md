@@ -2,9 +2,11 @@
 
 A python script to generate all [siteswaps](https://en.wikipedia.org/wiki/Siteswap) at least somewhat efficiently using [Cython](https://en.wikipedia.org/wiki/Cython).
 
-1) Compile cython file(s) by executing `python setup.py build_ext --inplace`
-2) `from siteswap import all_siteswaps, number_of_juggling_patterns, random_siteswap`
-3) ```python
+# Install
+`python setup.py build_ext --inplace` to compile cython file(s).
+
+# Usage
+```python
 from siteswap import (
     all_siteswaps,
     number_of_juggling_patterns,
@@ -25,11 +27,15 @@ Siteswaps are a notation to encode juggling patterns. They are read from left to
 
 !['3' or three-ball cascade](examples/3.gif)
 
+_'3' or three-ball cascade_
+
 Siteswaps are a notation system for patterns that are periodic, therefore the three-ball cascade `333` can be notated as just `3`, or similarly `441441` can be simplified to `441`. This is called the minimal period pattern, which is the only pattern we will explore.
 
 ## Ordering
 
 !['441'](examples/441.gif)
+
+_'441'_
 
 Notice that for all intents and purposes `441` is the same pattern as `414` or `144`, just shifted left or right once (i.e. started earlier or later). Since all patterns we have are periodic, we're going to say that we represent the pattern by the highest number, and therefore use `441` to describe this pattern.
 
@@ -40,6 +46,8 @@ Period `n` is the (smallest) length of a siteswap pattern. E.g. for `441`  `n=3`
 The number of balls `b` indicates how many balls are required to juggle a siteswap pattern.
 
 !['f001', a pattern with a single throw of 15](examples/f001.gif)
+
+_'f001', a pattern with a single throw of 15_
 
 When generating siteswaps we might sometimes want to constrain the maximum throw `t`. Humans on earth are after all not that great at throwing heights such as `t=15`.
 
@@ -87,23 +95,6 @@ def balls_dont_collide(sequence: list[int]) -> bool:
 There is a finite amount of siteswaps for any configuration of number of balls `b`, period `n` and maximum throw `t` if `b < ∞` and `n < ∞`. Why?
 
 Let's say `t=∞`, `b=3` and `n=3`. There are only 12 siteswaps with this configuration. For example, consider a valid pattern with this configuration `441`. We could always generate new siteswaps by subtracting the period `n=3` from one of the numbers in the pattern `411` or by adding the period `741`. However since the period of the pattern `n` didn't change, the number of balls `b` had to change in order to not violate the sum rule. Therefore all we need to do is produce patterns where the sum `s=9` remains the same.
-
-## Helper functions
-
-First, let's generate two helper functions:
-```python
-# jugglinglab.org siteswap notation
-# numbers 0-9 are mapped to their string representations
-# numbers 10-35 are mapped to a-z
-def int_to_siteswap(n: int) -> str:
-    if n < 0 or n > 35:
-        raise ValueError('Cannot convert to siteswap notation! Number must be between [0, 35]')
-    return '0123456789abcdefghijklmnopqrstuvwxyz'[n]
-
-def siteswap_to_int(s: str) -> int:
-    return int(s, 36)
-```
-These help conversion between strings and integers.
 
 ## Naive approach
 
