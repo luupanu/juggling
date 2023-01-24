@@ -21,7 +21,7 @@ def binary_search(x: int, a: list[list[int]]) -> int:
 def decode_hex(b: bytes) -> str:
     return b.hex().lstrip('0')
 
-def decode_int64(b: bytes) -> int:
+def decode_int(b: bytes) -> int:
     return int.from_bytes(b, byteorder='big', signed=False)
 
 def divisors(n: int) -> list[int]:
@@ -29,6 +29,9 @@ def divisors(n: int) -> list[int]:
 
 def encode_hex(s: str) -> bytes:
     return bytes.fromhex('0' * (16-len(s)) + s)
+
+def encode_int32(i: int) -> bytes:
+    return (i).to_bytes(4, byteorder='big', signed=False)
 
 def encode_int64(i: int) -> bytes:
     return (i).to_bytes(8, byteorder='big', signed=False)
