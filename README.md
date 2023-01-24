@@ -76,7 +76,7 @@ However, `3432` consists of the same numbers as the previous pattern but is not 
 (3+2) % 4 = 1
 (2+3) % 4 = 1
 ```
-Thus we see that for siteswaps, order matters. In fact, it can be proved that if we have numbers that pass the sum/average test we saw earlier, such as the previous pattern `3+4+3+2=12 / 4 = 3`, those numbers can always be re-arranged to produce a valid siteswap. This is similar to [re-arranging rooks on a chessboard](https://www.youtube.com/watch?v=IkJXpcU64-I&t=1539s) or so-called [rook polynomials](https://en.wikipedia.org/wiki/Rook_polynomial).
+Thus we see that for siteswaps, order matters. In fact, it can be proved that if we have numbers that pass the sum/average test we saw earlier, such as the previous pattern `(3+4+3+2) / 4 = 3`, those numbers can always be re-arranged to produce a valid siteswap. This is similar to [re-arranging rooks on a chessboard](https://www.youtube.com/watch?v=IkJXpcU64-I&t=1539s) or so-called [rook polynomials](https://en.wikipedia.org/wiki/Rook_polynomial).
 
 ## Collision check in Python
 
