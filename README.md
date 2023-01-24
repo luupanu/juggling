@@ -230,7 +230,7 @@ print(len(naive_all_siteswaps5(2, 4))) # prints 15
 There's a lot of remaining problems:
 
 1) Maximum throw `t` is not accounted for. The way we set up our maximum range in the for-loop means that we can't have throws higher than `t=9`.
-2) Our algorithm does not account for any erroneous input (`b<1; n<1; t<b`)
+2) Our algorithm does not account for any erroneous input (`b<1`, `n<1` or `t<b`)
 3) Our algorithm does not work for `n=1`
 4) As we are going through almost half the possible numbers with period `n`, the algorithm becomes super slow with higher periods:
 ```python
