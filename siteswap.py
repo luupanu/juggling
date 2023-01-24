@@ -19,7 +19,7 @@ def all_siteswaps(balls: int, period: int, max_throw: int = None) -> list[str]:
 
     _validate_siteswap(balls, period, max_throw)
 
-    s = set()
+    s = []
     
     # parallelize searching for siteswaps
     with Pool() as p:
@@ -27,7 +27,7 @@ def all_siteswaps(balls: int, period: int, max_throw: int = None) -> list[str]:
             p.apply_async(
                 all_siteswaps_between,
                 (period, balls, max_throw, i, i+1),
-                callback=s.update
+                callback=s.extend
             )
         p.close()
         p.join()

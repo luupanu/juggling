@@ -1147,6 +1147,23 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 /* PyIntCompare.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_EqObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
 
+/* ListAppend.proto */
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
+static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
+    PyListObject* L = (PyListObject*) list;
+    Py_ssize_t len = Py_SIZE(list);
+    if (likely(L->allocated > len) & likely(len > (L->allocated >> 1))) {
+        Py_INCREF(x);
+        PyList_SET_ITEM(list, len, x);
+        __Pyx_SET_SIZE(list, len + 1);
+        return 0;
+    }
+    return PyList_Append(list, x);
+}
+#else
+#define __Pyx_PyList_Append(L,x) PyList_Append(L,x)
+#endif
+
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
     (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
@@ -1371,7 +1388,7 @@ static PyObject *__pyx_int_neg_1;
 /* "juggling/_siteswap_cython.pyx":10
  * 
  * @cython.boundscheck(False)
- * cpdef set all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):             # <<<<<<<<<<<<<<
+ * cpdef list all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):             # <<<<<<<<<<<<<<
  *     start = max(0, start)
  *     stop = min(period * balls + 1, max_throw + 1, stop)
  */
@@ -1421,7 +1438,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
 
   /* "juggling/_siteswap_cython.pyx":11
  * @cython.boundscheck(False)
- * cpdef set all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):
+ * cpdef list all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):
  *     start = max(0, start)             # <<<<<<<<<<<<<<
  *     stop = min(period * balls + 1, max_throw + 1, stop)
  * 
@@ -1436,7 +1453,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
   __pyx_v_start = __pyx_t_3;
 
   /* "juggling/_siteswap_cython.pyx":12
- * cpdef set all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):
+ * cpdef list all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):
  *     start = max(0, start)
  *     stop = min(period * balls + 1, max_throw + 1, stop)             # <<<<<<<<<<<<<<
  * 
@@ -1463,7 +1480,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
  * 
  *     if period == 1 and start <= balls and stop > balls:             # <<<<<<<<<<<<<<
  *         # when period is 1, return just number of balls
- *         return set('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
+ *         return list('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
  */
   __pyx_t_6 = ((__pyx_v_period == 1) != 0);
   if (__pyx_t_6) {
@@ -1485,7 +1502,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
     /* "juggling/_siteswap_cython.pyx":16
  *     if period == 1 and start <= balls and stop > balls:
  *         # when period is 1, return just number of balls
- *         return set('0123456789abcdefghijklmnopqrstuvwxyz'[balls])             # <<<<<<<<<<<<<<
+ *         return list('0123456789abcdefghijklmnopqrstuvwxyz'[balls])             # <<<<<<<<<<<<<<
  * 
  *     if stop <= start or stop < balls + 2:
  */
@@ -1493,7 +1510,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
     __pyx_t_7 = __Pyx_GetItemInt_Unicode(__pyx_kp_u_0123456789abcdefghijklmnopqrstuv, __pyx_v_balls, int, 1, __Pyx_PyInt_From_int, 0, 1, 0); if (unlikely(__pyx_t_7 == (Py_UCS4)-1)) __PYX_ERR(0, 16, __pyx_L1_error)
     __pyx_t_8 = PyUnicode_FromOrdinal(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 16, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = PySet_New(__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 16, __pyx_L1_error)
+    __pyx_t_9 = PySequence_List(__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 16, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_r = ((PyObject*)__pyx_t_9);
@@ -1505,16 +1522,16 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
  * 
  *     if period == 1 and start <= balls and stop > balls:             # <<<<<<<<<<<<<<
  *         # when period is 1, return just number of balls
- *         return set('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
+ *         return list('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
  */
   }
 
   /* "juggling/_siteswap_cython.pyx":18
- *         return set('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
+ *         return list('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
  * 
  *     if stop <= start or stop < balls + 2:             # <<<<<<<<<<<<<<
- *         # start / stop wrong. return an empty set
- *         return set()
+ *         # start / stop wrong. return an empty list
+ *         return []
  */
   __pyx_t_6 = ((__pyx_v_stop <= __pyx_v_start) != 0);
   if (!__pyx_t_6) {
@@ -1529,41 +1546,41 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
 
     /* "juggling/_siteswap_cython.pyx":20
  *     if stop <= start or stop < balls + 2:
- *         # start / stop wrong. return an empty set
- *         return set()             # <<<<<<<<<<<<<<
+ *         # start / stop wrong. return an empty list
+ *         return []             # <<<<<<<<<<<<<<
  * 
  *     cdef list a
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_9 = PySet_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 20, __pyx_L1_error)
+    __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 20, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_r = ((PyObject*)__pyx_t_9);
     __pyx_t_9 = 0;
     goto __pyx_L0;
 
     /* "juggling/_siteswap_cython.pyx":18
- *         return set('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
+ *         return list('0123456789abcdefghijklmnopqrstuvwxyz'[balls])
  * 
  *     if stop <= start or stop < balls + 2:             # <<<<<<<<<<<<<<
- *         # start / stop wrong. return an empty set
- *         return set()
+ *         # start / stop wrong. return an empty list
+ *         return []
  */
   }
 
   /* "juggling/_siteswap_cython.pyx":37
  *     cdef str siteswap
  * 
- *     cdef set siteswaps = set()             # <<<<<<<<<<<<<<
+ *     cdef list siteswaps = []             # <<<<<<<<<<<<<<
  * 
  *     if start <= balls:
  */
-  __pyx_t_9 = PySet_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __pyx_v_siteswaps = ((PyObject*)__pyx_t_9);
   __pyx_t_9 = 0;
 
   /* "juggling/_siteswap_cython.pyx":39
- *     cdef set siteswaps = set()
+ *     cdef list siteswaps = []
  * 
  *     if start <= balls:             # <<<<<<<<<<<<<<
  *         # due to cyclicity of siteswaps e.g. '144' == '414' == '441'
@@ -1617,7 +1634,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
     __pyx_t_10 = 0;
 
     /* "juggling/_siteswap_cython.pyx":39
- *     cdef set siteswaps = set()
+ *     cdef list siteswaps = []
  * 
  *     if start <= balls:             # <<<<<<<<<<<<<<
  *         # due to cyclicity of siteswaps e.g. '144' == '414' == '441'
@@ -1976,7 +1993,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
  *                 # test if this siteswap has periodic sub-patterns
  *                 if (siteswap+siteswap).find(siteswap, 1, -1) == -1:             # <<<<<<<<<<<<<<
  *                     # all good, add
- *                     siteswaps.add(siteswap)
+ *                     siteswaps.append(siteswap)
  */
         __pyx_t_9 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_siteswap, __pyx_v_siteswap); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 90, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
@@ -1994,18 +2011,18 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
           /* "juggling/_siteswap_cython.pyx":92
  *                 if (siteswap+siteswap).find(siteswap, 1, -1) == -1:
  *                     # all good, add
- *                     siteswaps.add(siteswap)             # <<<<<<<<<<<<<<
+ *                     siteswaps.append(siteswap)             # <<<<<<<<<<<<<<
  * 
  *         while a[j] > 0 and a[i] < a[0]:
  */
-          __pyx_t_16 = PySet_Add(__pyx_v_siteswaps, __pyx_v_siteswap); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 92, __pyx_L1_error)
+          __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_siteswaps, __pyx_v_siteswap); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 92, __pyx_L1_error)
 
           /* "juggling/_siteswap_cython.pyx":90
  *                 siteswap = ''.join(['0123456789abcdefghijklmnopqrstuvwxyz'[x] for x in a])
  *                 # test if this siteswap has periodic sub-patterns
  *                 if (siteswap+siteswap).find(siteswap, 1, -1) == -1:             # <<<<<<<<<<<<<<
  *                     # all good, add
- *                     siteswaps.add(siteswap)
+ *                     siteswaps.append(siteswap)
  */
         }
 
@@ -2028,7 +2045,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
     }
 
     /* "juggling/_siteswap_cython.pyx":94
- *                     siteswaps.add(siteswap)
+ *                     siteswaps.append(siteswap)
  * 
  *         while a[j] > 0 and a[i] < a[0]:             # <<<<<<<<<<<<<<
  *             # add to i, subtract from j. e.g. '3122' => '3131'
@@ -2302,7 +2319,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
  *                     # test if this siteswap has periodic sub-patterns
  *                     if (siteswap+siteswap).find(siteswap, 1, -1) == -1:             # <<<<<<<<<<<<<<
  *                         # all good, add
- *                         siteswaps.add(siteswap)
+ *                         siteswaps.append(siteswap)
  */
           __pyx_t_15 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_siteswap, __pyx_v_siteswap); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 118, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_15);
@@ -2320,18 +2337,18 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
             /* "juggling/_siteswap_cython.pyx":120
  *                     if (siteswap+siteswap).find(siteswap, 1, -1) == -1:
  *                         # all good, add
- *                         siteswaps.add(siteswap)             # <<<<<<<<<<<<<<
+ *                         siteswaps.append(siteswap)             # <<<<<<<<<<<<<<
  * 
  *             # if (i, j) are not the two rightmost indexes,
  */
-            __pyx_t_16 = PySet_Add(__pyx_v_siteswaps, __pyx_v_siteswap); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 120, __pyx_L1_error)
+            __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_siteswaps, __pyx_v_siteswap); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 120, __pyx_L1_error)
 
             /* "juggling/_siteswap_cython.pyx":118
  *                     siteswap = ''.join(['0123456789abcdefghijklmnopqrstuvwxyz'[x] for x in a])
  *                     # test if this siteswap has periodic sub-patterns
  *                     if (siteswap+siteswap).find(siteswap, 1, -1) == -1:             # <<<<<<<<<<<<<<
  *                         # all good, add
- *                         siteswaps.add(siteswap)
+ *                         siteswaps.append(siteswap)
  */
           }
 
@@ -2716,7 +2733,7 @@ static PyObject *__pyx_f_8juggling_16_siteswap_cython_all_siteswaps_between(int 
   /* "juggling/_siteswap_cython.pyx":10
  * 
  * @cython.boundscheck(False)
- * cpdef set all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):             # <<<<<<<<<<<<<<
+ * cpdef list all_siteswaps_between(int period, int balls, int max_throw, int start, int stop):             # <<<<<<<<<<<<<<
  *     start = max(0, start)
  *     stop = min(period * balls + 1, max_throw + 1, stop)
  */
