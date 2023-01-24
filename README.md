@@ -18,7 +18,7 @@ all_ss = all_siteswaps(balls=5, period=5, max_throw=7)
 n = number_of_juggling_patterns(balls=5, period=5, max_throw=7)
 r = random_siteswap(balls=5, period=5, max_throw=7)
 
-print(len(ss) == n, r in all_ss)
+print(len(all_ss) == n, r in all_ss)
 print(f"n={n}, random_pattern='{r}'")
 ```
 

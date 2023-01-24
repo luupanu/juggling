@@ -13,7 +13,7 @@ from _util_functions import (
 )
 import json
 
-__all__ == 'SiteswapDB'
+__all__ = ['SiteswapDB']
 
 class SiteswapFileException(Exception):
     pass
