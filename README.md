@@ -22,13 +22,16 @@ print(len(all_ss) == n, r in all_ss)
 print(f"n={n}, random_pattern='{r}'")
 ```
 
+# Tests
+`python -m unittest tests/*.py`
+
 # Siteswaps
 
 Siteswaps are a notation system to encode juggling patterns. They are read from left to right. The next number in a siteswap pattern indicates to make a throw on this beat that lands `m` beats later. Therefore, higher numbers indicate a higher (or faster) throw, and lower numbers a lower throw. There are two special throws: `0` indicates no ball in hand, and `2` means to hold the ball for one beat in a hand. In a vanilla siteswap, even beats always fall to the same hand, odd beats cross to the other hand.
 
 !['3' or three-ball cascade](examples/3.gif)
 
-`3` _or three-ball cascade_
+_`3` or three-ball cascade_
 
 Siteswaps notate patterns that are periodic, therefore the three-ball cascade `333` can be notated as just `3`, or similarly `441441` can be simplified to `441`. This is called the minimal period pattern, which is the only pattern we will explore.
 
@@ -36,7 +39,7 @@ Siteswaps notate patterns that are periodic, therefore the three-ball cascade `3
 
 !['441'](examples/441.gif)
 
-`441`
+_`441` pattern_
 
 Notice that for all intents and purposes `441` is the same pattern as `414` or `144`, just shifted left or right once (i.e. started earlier or later). Since all patterns we have are periodic, we're going to say that the highest number prevails, and therefore use `441` to describe this pattern.
 
@@ -48,7 +51,7 @@ The number of balls `b` indicates how many balls are required to juggle a sitesw
 
 !['f001', a pattern with a single throw of 15](examples/f001.gif)
 
-`f001`_, a pattern with a single throw of 15_
+_`f001` – a pattern with a single throw of 15_
 
 When generating siteswaps we might sometimes want to constrain the maximum throw `t`. Humans on earth are after all not that great at throwing heights such as `t=15`.
 
@@ -95,7 +98,7 @@ def balls_dont_collide(sequence: list[int]) -> bool:
 
 # Generating all siteswaps
 
-There is a finite amount of siteswaps for any configuration of number of balls `b`, period `n` and maximum throw `t` if `b < ∞` and `n < ∞`.
+There is a finite amount of siteswaps for any configuration of number of balls `b`, period `n` and maximum throw `t` if `b<∞` and `n<∞`.
 
 Why?
 
@@ -142,11 +145,11 @@ print(len(naive_all_siteswaps2(3, 3))) # prints 30
 ```
 Again, too many patterns. The key is to notice that we are generating same patterns multiple times, e.g. `117`, `171` and `711`. Since we only care about representing the pattern as the one with the highest number, we shouldn't start generating from such a low number.
 
-But how to reason about where to start the process from? We notice that if there's a maximum number `m` inside the pattern, it should be on the left-most slot. Therefore every number where the maximum number is not on the left-most slot can be discarded. Since the average throw of the pattern is `s/n = 9/3 = 3`, we can discard every number that is lower than `333`. All of the patterns below `333` would have the maximum number `m` in another slot than the left-most.
+But how to reason about where to start the process from? We notice that if there's a maximum number `m` inside the pattern, it should be on the leftmost slot. Therefore every number where the maximum number is not on the leftmost slot can be discarded. Since the average throw of the pattern is `s/n = 9/3 = 3`, we can discard every number that is lower than `333`. All of the patterns below `333` would have the maximum number `m` in another slot than the leftmost.
 
 We can also discard `333` since that could be represented minimally by `3`, which is a period `n=1` pattern.
 
-The only way to produce a new pattern with our constraints is if the sum stays the same. Therefore in order to get the next pattern after `333` we need to add `1` to the left-most number and subtract `1` from another number in order to generate a new pattern. Therefore the lowest starting number should be `423`.
+The only way to produce a new pattern with our constraints is if the sum stays the same. Therefore in order to get the next pattern after `333` we need to add `1` to the leftmost number and subtract `1` from another number in order to generate a new pattern. Therefore the lowest starting number should be `423`.
 ```python
 def naive_all_siteswaps3(balls: int, period: int):
     if period == 1:
