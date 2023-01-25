@@ -1,20 +1,18 @@
 from scipy.sparse import csr_matrix
-from ._util_functions import (
-    binary_search,
-    multiset_permutations
-)
 import numpy as np
+
+__all__ = ['adjacency_matrix', 'divisors', 'mobius']
 
 # returns a sparse scipy matrix instead of the usual numpy array
 def adjacency_matrix(balls: int, max_throw: int) -> np.ndarray:
-    states = list(multiset_permutations([1] * balls + [0] * (max_throw - balls)))
+    states = list(_multiset_permutations([1] * balls + [0] * (max_throw - balls)))
     rows = []
     cols = []
 
     for i, state in enumerate(states):
         a = state[1:] + [state[0]]
 
-        j = binary_search(a, states)
+        j = _binary_search(a, states)
 
         rows.append(i)
         cols.append(j)
@@ -30,7 +28,7 @@ def adjacency_matrix(balls: int, max_throw: int) -> np.ndarray:
                 a[k], a[l] = a[l], a[k]
                 l = k
 
-                j = binary_search(a, states)
+                j = _binary_search(a, states)
 
                 rows.append(i)
                 cols.append(j)
@@ -41,7 +39,7 @@ def adjacency_matrix(balls: int, max_throw: int) -> np.ndarray:
 
 # based on the remainder check in
 # https://en.wikipedia.org/wiki/Siteswap#Validity
-def balls_dont_collide(sequence: list[int]) -> bool:
+def _balls_dont_collide(sequence: list[int]) -> bool:
     period = len(sequence)
     taken = [False] * period
 
@@ -52,19 +50,87 @@ def balls_dont_collide(sequence: list[int]) -> bool:
         taken[check] = True
     return True
 
-# jugglinglab.org siteswap notation
-# numbers 0-9 are mapped to their string representations
-# numbers 10-35 are mapped to a-z
-def int_to_siteswap(n: int) -> str:
-    if n < 0 or n > 35:
-        raise ValueError('Cannot convert to siteswap notation! Number must be between [0, 35]')
-    return '0123456789abcdefghijklmnopqrstuvwxyz'[n]
+def _binary_search(x: int, a: list[list[int]]) -> int:
+    m = 0
+    n = len(a)
 
-def siteswap_to_int(s: str) -> int:
-    return int(s, 36)
+    # check sort order
+    if len(a) > 1 and a[0] > a[1]:
+        m, n = n, m
+
+    while True:
+        i = (m+n) // 2
+
+        if a[i] == x:
+            return i
+        elif a[i] < x:
+            m = i
+        else:
+            n = i
+
+def divisors(n: int) -> list[int]:
+    return [x for x in range(1, n+1) if n % x == 0]
+
+# https://en.wikipedia.org/wiki/M%C3%B6bius_function
+def mobius(n: int) -> int:
+    if not isinstance(n, int) or n < 1:
+        raise ValueError('mobius function works only with positive integers!')
+
+    p = _prime_factors(n)
+
+    for x in p:
+        if n % (x*x) == 0:
+            return 0
+
+    if len(p) % 2 == 0:
+        return 1
+    else:
+        return -1
+
+def _multiset_permutations(a: list[int]) -> list[list[int]]:
+    a = sorted(a, reverse=True)
+
+    yield(a.copy())
+
+    n = len(a)
+    i = n - 2
+
+    while True:
+        for i in range(len(a) - 2, -2, -1):
+            if a[i] > a[i+1]:
+                j = i + 1
+                break
+
+        if i < 0:
+            break
+
+        a[i], a[j] = a[j], a[i]
+        a[j+1:] = reversed(a[j+1:])
+
+        yield a.copy()
+
+def _prime_factors(n: int) -> list[int]:
+    i = 2
+    factors = []
+    while i * i <= n:
+        if n % i:
+            i += 1
+        else:
+            n //= i
+            factors.append(i)
+    if n > 1:
+        factors.append(n)
+    return factors
 
 # 441 is the same siteswap as 414 and 144
 # prefer the notation with the biggest number
-def sort_sequence(sequence: list[int]) -> list[int]:
+def _sort_sequence(sequence: list[int]) -> list[int]:
     permutations = [sequence[i:] + sequence[:i] for i in range(len(sequence))]
     return max(permutations)
+
+# amazing algorithm
+# https://stackoverflow.com/a/29489919
+def _substring_is_periodic(s: str) -> bool:
+    if len(s) == 1:
+        return False
+    return (s+s).find(s, 1, -1) != -1
