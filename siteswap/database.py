@@ -81,7 +81,7 @@ class SiteswapDB():
         """
         self._validate_header(b)
 
-        balls = decode_int(b[8:16])
+        balls = decode_int(b[8:12])
         max_throw = decode_int(b[12:16])
         patterns = {i: decode_int(b[8+i*8:16+i*8]) for i in range(1, 17)}
 
