@@ -60,28 +60,37 @@ def random_siteswap(balls: int, period: int, max_throw: int = None) -> str:
 
     try:
         b, t, patterns = db.get_header(balls)
-        N = number_of_juggling_patterns(balls, period, max_throw)
 
-        if b == balls and t >= max_throw and patterns[period] >= N:
-            random_number = randrange(0, N)
+        if patterns[period] == 0:
+            print(f"Database file 'db/{balls}.bin' has 0 patterns with period {period}")
+            return
 
-            siteswap = db.get_siteswap(random_number, balls, period)
+        if b == balls and t >= max_throw:
+            # this might be a really expensive operation
+            N = number_of_juggling_patterns(balls, period, max_throw)
 
-            return siteswap
-        else:
-            print(f"Database file 'db/{balls}.bin' has patterns with {b} balls only up to a max_throw of {t}")
+            if patterns[period] >= N:
+                random_number = randrange(0, N)
+                siteswap = db.get_siteswap(random_number, balls, period)
+
+                return siteswap
+
+        print(f"Database file 'db/{balls}.bin' has patterns only up to a max_throw of {t}")
     except (FileNotFoundError, IsADirectoryError, PermissionError, OSError) as e:
         print(f"Could not access db file 'db/{balls}.bin'' for random siteswap lookup")
 
 def _validate_siteswap(balls: int, period: int, max_throw: int) -> None:
-    if max_throw > 35:
-        raise ValueError('maximum throw must be less than 36!')
-
     if balls < 1:
         raise ValueError('balls must be at least 1!')
 
     if period < 1:
         raise ValueError('period must be at least 1!')
 
+    if max_throw > 35:
+        raise ValueError('maximum throw must be less than 36!')
+
     if max_throw < balls:
         raise ValueError('maximum throw must be at least the number of balls!')
+
+    if max_throw == balls and period > 1:
+        raise ValueError('maximum throw must be more than the number of balls if period > 1')

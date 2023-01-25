@@ -127,7 +127,6 @@ class SiteswapDB():
         signature = b[:8]
 
         if signature != b'SITESWAP':
-            print(signature)
             raise SiteswapFileException('File signature missing from header!')
 
         end_of_header = b[-16:]
