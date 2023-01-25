@@ -4,7 +4,8 @@ A python script to generate all [siteswaps](https://en.wikipedia.org/wiki/Sitesw
 
 # Install
 1) `pip install .`
-2) `USE_CYTHON=True python setup.py build_ext --inplace` to compile cython file(s).
+2) (Optional) Set environment variable `USE_CYTHON=True` to compile cython `.pyx` file(s) yourself.  
+E.g. `USE_CYTHON=True python setup.py build_ext --inplace`
 
 # Usage
 ```python
