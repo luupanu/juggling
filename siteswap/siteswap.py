@@ -55,17 +55,23 @@ def random_siteswap(balls: int, period: int, max_throw: int = None) -> str:
         max_throw = balls * period
 
     _validate_siteswap(balls, period, max_throw)
-    
-    with open('db/patterns.json', 'r') as f:
-        patterns = json.load(f)
 
-    N = patterns[balls-1][period-1][max_throw-1]
+    db = SiteswapDB()
 
-    random_number = randrange(0, N)
+    try:
+        b, t, patterns = db.get_header(balls)
+        N = number_of_juggling_patterns(balls, period, max_throw)
 
-    siteswap = SiteswapDB().get_siteswap(random_number, balls, period)
+        if b == balls and t >= max_throw and patterns[period] >= N:
+            random_number = randrange(0, N)
 
-    return siteswap
+            siteswap = db.get_siteswap(random_number, balls, period)
+
+            return siteswap
+        else:
+            print(f"Database file 'db/{balls}.bin' has patterns with {b} balls only up to a max_throw of {t}")
+    except (FileNotFoundError, IsADirectoryError, PermissionError, OSError) as e:
+        print(f"Could not access db file 'db/{balls}.bin'' for random siteswap lookup")
 
 def _validate_siteswap(balls: int, period: int, max_throw: int) -> None:
     if max_throw > 35:
