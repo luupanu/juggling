@@ -12,6 +12,7 @@ from ._helpers._util_functions import (
     patterns_to_printable_filesize,
 )
 import json
+import os
 
 __all__ = ['SiteswapDB']
 
@@ -134,6 +135,24 @@ class SiteswapDB():
         if decode_hex(end_of_header) != 'f' * 32:
             raise SiteswapFileException('End of header missing from header!')
 
+    def get_header(self, balls: int) -> tuple[int, int, dict[int, int]]:
+        """
+        Gets the header of a siteswap file.
+
+        :param   balls:                 number of balls in the siteswap pattern
+        :raises  SiteswapFileException: if header is not valid
+        :returns a tuple of (balls, max_throw, patterns)
+        """
+        try:
+            filename = os.path.join(os.path.dirname(__file__), 'db', f'{balls}balls.bin')
+
+            with open(filename, 'rb') as f:
+                balls, max_throw, patterns = self._read_header(f.read(HEADER_SIZE))
+
+            return balls, max_throw, patterns
+        except (FileNotFoundError, IsADirectoryError, PermissionError, OSError) as e:
+            print(e)
+
     def get_siteswap(self, i: int, balls: int, period: int) -> str:
         """
         Fetches a single siteswap with index i, balls b and period n from a siteswap file.
@@ -153,7 +172,9 @@ class SiteswapDB():
         :raises SiteswapFileException: if period of fetched siteswap is wrong, meaning that header and data don't match
         """
         try:
-            with open(f'db/{balls}balls.bin', 'rb') as f:
+            filename = os.path.join(os.path.dirname(__file__), 'db', f'{balls}balls.bin')
+
+            with open(filename, 'rb') as f:
                 _, _, patterns = self._read_header(f.read(HEADER_SIZE))
 
                 period_start = sum(list(patterns.values())[:period-1])
@@ -191,7 +212,9 @@ class SiteswapDB():
         :raises Error: if file could not be read
         """
         try:
-            with open(f'db/{balls}balls.bin', 'rb') as f:
+            filename = os.path.join(os.path.dirname(__file__), 'db', f'{balls}balls.bin')
+
+            with open(filename, 'rb') as f:
                 _, _, patterns = self._read_header(f.read(HEADER_SIZE))
 
                 period_start = sum(list(patterns.values())[:period-1])
