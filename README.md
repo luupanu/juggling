@@ -3,8 +3,8 @@
 A python script to generate all [siteswaps](https://en.wikipedia.org/wiki/Siteswap) at least somewhat efficiently using [Cython](https://en.wikipedia.org/wiki/Cython).
 
 # Install
-1) `pip install -r requirements.txt`
-2) `python setup.py build_ext --inplace` to compile cython file(s).
+1) `pip install .`
+2) `USE_CYTHON=True python setup.py build_ext --inplace` to compile cython file(s).
 
 # Usage
 ```python
@@ -23,7 +23,7 @@ print(f"n={n}, random_pattern='{r}'")
 ```
 
 # Tests
-`python -m unittest tests/*.py`
+`python -m unittest siteswap/tests/*.py`
 
 # Siteswaps
 

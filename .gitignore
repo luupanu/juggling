@@ -2,6 +2,7 @@
 __pycache__/
 build/
 db_backup/
+*.egg-info/
 
 # Files
 .DS_Store
