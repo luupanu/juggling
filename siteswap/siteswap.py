@@ -1,11 +1,11 @@
-from helpers._helper_functions import adjacency_matrix
-from helpers._siteswap_cython import all_siteswaps_between
-from helpers._util_functions import (
+from ._helpers._helper_functions import adjacency_matrix
+from ._helpers._siteswap_cython import all_siteswaps_between
+from ._helpers._util_functions import (
     divisors,
     mobius,
 )
 
-from database import SiteswapDB
+from siteswap.database import SiteswapDB
 from multiprocessing import Pool
 from random import randrange
 import json

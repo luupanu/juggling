@@ -4,8 +4,8 @@ from Cython.Build import cythonize
 
 ext_modules = [
     Extension(
-        name = 'juggling.helpers._siteswap_cython',
-        sources = ['juggling/helpers/_siteswap_cython.pyx']
+        name = 'siteswap.helpers._siteswap_cython',
+        sources = ['siteswap/helpers/_siteswap_cython.pyx']
     )
 ]
 
